@@ -15,23 +15,21 @@
 </p>
 
 <p align="center">
-  <strong>Deterministic, P2P Edge State Synchronization via Conflict-Free Replicated Data Cookies.</strong><br/>
+  <strong>Deterministic, P2P Edge State Synchronization via Conflict-Free Replicated Data Cookies. 🧪</strong><br/>
   A high-integrity, browser-native research prototype demonstrating zero-backend eventual consistency using join-semilattices, causal vector clocks, and cryptographic cookie boundaries.
 </p>
 
 ---
 
 <p align="center">
-  <a href="/VXR-Continuum/paper/VXR-Continuum_IEEE.pdf" target="_blank"><strong>Read 10-Page Research Paper (PDF)</strong></a> · 
-  <a href="#mathematical-model"><strong>Formal Mathematics</strong></a> · 
-  <a href="#cookie-protocol"><strong>Cookie Protocol</strong></a> · 
-  <a href="#run-locally"><strong>Run Locally</strong></a> · 
-  <a href="#citation"><strong>Academic Citation</strong></a>
+  <a href="https://voxion-labs.github.io/VXR-Continuum/" target="_blank"><strong>🌐 Live Interactive Dashboard</strong></a> · 
+  <a href="https://voxion-labs.github.io/VXR-Continuum/paper/VXR-Continuum_IEEE.pdf" target="_blank"><strong>📄 Read 10-Page Research Paper (PDF)</strong></a> · 
+  <a href="https://github.com/Voxion-Labs/VXR-Continuum" target="_blank"><strong>💻 Source Code Repository</strong></a>
 </p>
 
 ---
 
-## <p align="center">Executive Overview</p>
+## <p align="center">Executive Overview 📑</p>
 
 Modern decentralized applications operating at the edge are constrained by network latency, packet loss, and frequent disconnected periods. Traditional client-server models rely on heavy synchronization locks, causing UI blocking, high server overhead, and data residency hazards.
 
@@ -39,7 +37,7 @@ Modern decentralized applications operating at the edge are constrained by netwo
 
 ---
 
-## <p align="center">Core Architecture & Data Flow</p>
+## <p align="center">Core Architecture & Data Flow ⚙️</p>
 
 The VXR-Continuum architecture is built on origin isolation, local memory evaluation, and asynchronous edge-to-edge convergence:
 
@@ -65,7 +63,7 @@ The VXR-Continuum architecture is built on origin isolation, local memory evalua
 
 ---
 
-## <p align="center" id="mathematical-model">Mathematical Foundations of CvRDTs</p>
+## <p align="center" id="mathematical-model">Mathematical Foundations of CvRDTs 📐</p>
 
 To guarantee conflict-free, deterministic convergence across distributed edge replicas without central lock coordination, VXR-Continuum models state transitions strictly as a **bounded join-semilattice** $(S, \sqcup, \le, \bot)$, where:
 * $S$ is the set of all possible state values.
@@ -75,12 +73,12 @@ To guarantee conflict-free, deterministic convergence across distributed edge re
 
 ### <p align="center">Lattice Properties</p>
 
- deterministic eventual consistency is mathematically guaranteed because the merge operator $\sqcup$ satisfies three mathematical properties:
+Deterministic eventual consistency is mathematically guaranteed because the merge operator $\sqcup$ satisfies three mathematical properties:
 
 $$\begin{aligned}
 \text{1. Idempotency:} \quad & x \sqcup x = x \\
 \text{2. Commutativity:} \quad & x \sqcup y = y \sqcup x \\
-\text{3. Associativity:} \quad & x \sqcup (y \sqcup z) = (x \sqcup y) \sqcup z
+\text{3. Associativity:} \quad & x \sqcup (y \sqcup z) = (x \sqcup y) \dots
 \end{aligned}$$
 
 ### <p align="center">Monotonic Progression & Eventual Convergence</p>
@@ -97,7 +95,7 @@ This guarantees that all edge nodes reach identical state convergence regardless
 
 ---
 
-## <p align="center">Causal Ordering & Vector Clocks</p>
+## <p align="center">Causal Ordering & Vector Clocks 🕒</p>
 
 While the join-semilattice guarantees convergence, resolving concurrent edits and preserving causal history requires logical **Vector Clocks**. Each replica node $i$ maintains a clock vector $V_i$ of size $N$ (active nodes):
 
@@ -119,7 +117,7 @@ When a conflict is detected ($V_1 \parallel V_2$), VXR-Continuum deploys a **Las
 
 ---
 
-## <p align="center" id="cookie-protocol">Cookie-Based Edge Transport Protocol</p>
+## <p align="center" id="cookie-protocol">Cookie-Based Edge Transport Protocol 📦</p>
 
 HTTP document cookies are constrained by browser sandboxes to a maximum payload size of **4096 bytes** per domain. VXR-Continuum optimizes space utilization by executing delta-compaction (gzip) and Base64-URL serialization, packing states into structured protocol headers.
 
@@ -136,7 +134,7 @@ HTTP document cookies are constrained by browser sandboxes to a maximum payload 
 
 ---
 
-## <p align="center">Security & Tampering Boundaries</p>
+## <p align="center">Security & Tampering Boundaries 🛡️</p>
 
 Storing synchronization states inside document cookies exposes data to client-side manipulation. VXR-Continuum secures the transport boundary by enforcing a strict **HMAC-SHA256 Signature Chain**:
 
@@ -162,7 +160,7 @@ const verifyCookiePayload = (cookie: RawCookiePacket, secretKey: string): boolea
 
 ---
 
-## <p align="center">Empirical Telemetry Performance</p>
+## <p align="center">Empirical Telemetry Performance 📈</p>
 
 Under comprehensive benchmarking simulating $N=10,000$ operations across concurrent edge clients, local browser in-memory CRDT-cookie merging achieved **sub-millisecond convergence**, executing orders of magnitude faster than cloud round-trips.
 
@@ -181,7 +179,7 @@ Under comprehensive benchmarking simulating $N=10,000$ operations across concurr
 
 ---
 
-## <p align="center" id="run-locally">Run Locally</p>
+## <p align="center" id="run-locally">Run Locally 🚀</p>
 
 Verify the edge synchronization visualizer in your local environment:
 
@@ -211,7 +209,7 @@ The production assets compile cleanly into the `/dist/` folder for global static
 
 ---
 
-## <p align="center">Author</p>
+## <p align="center">Author 👥</p>
 
 <table align="center" style="border: none;">
 <tr style="border: none;">
@@ -221,6 +219,7 @@ The production assets compile cleanly into the `/dist/` folder for global static
 <td style="border: none; vertical-align: middle;">
   <strong><font size="4">Rudranarayan Jena</font></strong><br/>
   <em>Founder, <a href="https://github.com/Voxion-Labs" target="_blank">Voxion Labs</a></em><br/>
+  <em>Academic Profile: <a href="https://github.com/liambrooks-lab" target="_blank">@liambrooks-lab</a></em><br/>
   <em>D.Y. Patil International University, Pune, India</em><br/><br/>
   <p style="margin: 0; color: #4b5563; font-size: 0.9em; max-width: 460px;">
     Applied researcher in distributed systems security and edge computing. Currently directing the <strong>VXR-Continuum</strong> initiative to study high-integrity eventual convergence and conflict-free replicated data types in sandboxed client layers.
@@ -231,7 +230,7 @@ The production assets compile cleanly into the `/dist/` folder for global static
 
 ---
 
-## <p align="center" id="citation">Academic Citation & Bibliography</p>
+## <p align="center" id="citation">Academic Citation & Bibliography 📄</p>
 
 If you reference this work or utilize the VXR-Continuum eventual consistency model in your research, please cite our whitepaper:
 
@@ -255,7 +254,7 @@ If you reference this work or utilize the VXR-Continuum eventual consistency mod
 
 ---
 
-## <p align="center">License</p>
+## <p align="center">License ⚖️</p>
 
 This repository is licensed under the **MIT License**.
 
