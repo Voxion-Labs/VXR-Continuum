@@ -12,231 +12,11 @@ export const initVisualizer = (containerId: string): void => {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  // Inject scoped visualizer styles for premium aesthetics
-  const styleEl = document.createElement('style');
-  styleEl.textContent = `
-    .dashboard {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      width: 100%;
-      text-align: left;
-    }
-    .node-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2rem;
-      position: relative;
-    }
-    .node-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 1.75rem;
-      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-    }
-    .node-card:hover {
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
-      transform: translateY(-2px);
-    }
-    .node-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--accent);
-      opacity: 0.1;
-    }
-    .node-card.active-mutation::before {
-      opacity: 1;
-      background: #f59e0b;
-    }
-    .node-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.25rem;
-      border-bottom: 1px dashed #e2e8f0;
-      padding-bottom: 0.75rem;
-    }
-    .node-title {
-      font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.375rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.25rem 0.625rem;
-      border-radius: 9999px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .status-badge.synced {
-      background-color: #ecfdf5;
-      color: #059669;
-    }
-    .status-badge.unsynced {
-      background-color: #fef3c7;
-      color: #d97706;
-    }
-    .status-led {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-    .status-badge.synced .status-led {
-      background-color: #10b981;
-      box-shadow: 0 0 8px #10b981;
-    }
-    .status-badge.unsynced .status-led {
-      background-color: #f59e0b;
-      box-shadow: 0 0 8px #f59e0b;
-      animation: pulse-amber 1.5s infinite;
-    }
-    @keyframes pulse-amber {
-      0% { opacity: 0.6; }
-      50% { opacity: 1; }
-      100% { opacity: 0.6; }
-    }
-    .input-group {
-      margin-bottom: 1.5rem;
-    }
-    .input-label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.375rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .text-input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      font-family: var(--font-sans);
-      font-size: 0.95rem;
-      color: var(--text-primary);
-      background-color: #f8fafc;
-      transition: var(--transition-smooth);
-    }
-    .text-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      background-color: #ffffff;
-      box-shadow: 0 0 0 4px var(--accent-light);
-    }
-    .metadata-panel {
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 1rem;
-      font-size: 0.8rem;
-    }
-    .metadata-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-      font-family: monospace;
-    }
-    .metadata-row:last-child {
-      margin-bottom: 0;
-    }
-    .metadata-label {
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .metadata-value {
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-    .clock-badge {
-      background-color: #e2e8f0;
-      color: #334155;
-      padding: 0.125rem 0.375rem;
-      border-radius: 4px;
-      margin-left: 0.25rem;
-      font-weight: bold;
-    }
-    .network-bridge {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100px;
-      height: 2px;
-      background: repeating-linear-gradient(90deg, #cbd5e1, #cbd5e1 6px, transparent 6px, transparent 12px);
-      transform: translate(-50%, -50%);
-      z-index: 0;
-    }
-    @media (max-width: 768px) {
-      .network-bridge { display: none; }
-    }
-    .control-dock {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      border-top: 1px solid var(--border-color);
-      padding-top: 2rem;
-    }
-    .sync-progress-bar {
-      width: 100%;
-      max-width: 500px;
-      height: 4px;
-      background-color: #e2e8f0;
-      border-radius: 9999px;
-      overflow: hidden;
-      display: none;
-    }
-    .sync-progress-fill {
-      width: 0%;
-      height: 100%;
-      background-color: var(--accent);
-      transition: width 0.8s linear;
-    }
-    .terminal-logs {
-      width: 100%;
-      height: 180px;
-      background-color: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 14px;
-      padding: 1rem;
-      color: #38bdf8;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.8rem;
-      overflow-y: auto;
-      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-    .log-line {
-      margin-bottom: 0.375rem;
-      line-height: 1.4;
-    }
-    .log-time { color: #64748b; margin-right: 0.5rem; }
-    .log-tag { font-weight: bold; margin-right: 0.5rem; }
-    .log-tag.system { color: #f43f5e; }
-    .log-tag.crdt { color: #34d399; }
-    .log-tag.sync { color: #fbbf24; }
-  `;
-  document.head.appendChild(styleEl);
-
-  // Set up visual structure
+  // Set up dense grid visual structure
   container.innerHTML = `
     <div class="dashboard">
+      
+      <!-- LEFT COLUMN: Replicas -->
       <div class="node-grid">
         
         <!-- Paris Node Panel -->
@@ -261,14 +41,12 @@ export const initVisualizer = (containerId: string): void => {
               <span class="metadata-label">Last Timestamp</span>
               <span class="metadata-value" id="paris-time-val">-</span>
             </div>
-            <div class="metadata-row">
-              <span class="metadata-label">Raw CRDT Value</span>
-              <span class="metadata-value" id="paris-raw-val">""</span>
+            <div class="metadata-row" style="flex-direction: column; align-items: stretch; gap: 0.5rem; border-bottom: none; padding-bottom: 0;">
+              <span class="metadata-label" style="margin-bottom: 0.25rem;">Raw CRDT State Frame</span>
+              <pre class="raw-state-dump" id="paris-raw-val" style="margin: 0; background: #0f172a; color: #38bdf8; padding: 0.625rem; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.68rem; overflow: auto; max-height: 110px; text-align: left; border: 1px solid #334155; white-space: pre-wrap; word-break: break-all;"></pre>
             </div>
           </div>
         </div>
-
-        <div class="network-bridge"></div>
 
         <!-- Tokyo Node Panel -->
         <div class="node-card" id="tokyo-card">
@@ -292,19 +70,53 @@ export const initVisualizer = (containerId: string): void => {
               <span class="metadata-label">Last Timestamp</span>
               <span class="metadata-value" id="tokyo-time-val">-</span>
             </div>
-            <div class="metadata-row">
-              <span class="metadata-label">Raw CRDT Value</span>
-              <span class="metadata-value" id="tokyo-raw-val">""</span>
+            <div class="metadata-row" style="flex-direction: column; align-items: stretch; gap: 0.5rem; border-bottom: none; padding-bottom: 0;">
+              <span class="metadata-label" style="margin-bottom: 0.25rem;">Raw CRDT State Frame</span>
+              <pre class="raw-state-dump" id="tokyo-raw-val" style="margin: 0; background: #0f172a; color: #38bdf8; padding: 0.625rem; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.68rem; overflow: auto; max-height: 110px; text-align: left; border: 1px solid #334155; white-space: pre-wrap; word-break: break-all;"></pre>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Network Synchronization Controls -->
+      <!-- RIGHT COLUMN: Control Room -->
       <div class="control-dock">
-        <button id="sync-btn" class="research-btn" style="padding: 1rem 3rem; font-size: 1.05rem;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 22px; height: 22px;">
+        
+        <!-- System Telemetry Section -->
+        <div class="telemetry-panel">
+          <div class="panel-header">System Telemetry</div>
+          <div class="telemetry-grid">
+            <div class="telemetry-item">
+              <span class="telemetry-label">Sync Latency</span>
+              <span class="telemetry-value" id="telemetry-latency">0.22 ms</span>
+            </div>
+            <div class="telemetry-item">
+              <span class="telemetry-label">Payload Size</span>
+              <span class="telemetry-value" id="telemetry-payload">184 bytes</span>
+            </div>
+            <div class="telemetry-item">
+              <span class="telemetry-label">Vector Drift</span>
+              <span class="telemetry-value" id="telemetry-drift">0.00%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Algorithmic Conflict Resolution Section -->
+        <div class="math-panel">
+          <div class="panel-header">Algorithmic Conflict Resolution</div>
+          <div class="formula-block">
+            <span class="formula-label">State Merge:</span>
+            <span class="formula-math">∀k ∈ K, V_merged[k] = max(V_local[k], V_remote[k])</span>
+          </div>
+          <div class="formula-block">
+            <span class="formula-label">LWW Fallback:</span>
+            <span class="formula-math">T_winner = max(Timestamp_local, Timestamp_remote)</span>
+          </div>
+        </div>
+
+        <!-- Network Synchronization Controls -->
+        <button id="sync-btn" class="research-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
           </svg>
           Force Global Edge Sync
@@ -319,6 +131,7 @@ export const initVisualizer = (containerId: string): void => {
           <!-- Active system logs populate here -->
         </div>
       </div>
+
     </div>
   `;
 
@@ -342,13 +155,17 @@ export const initVisualizer = (containerId: string): void => {
   const tokyoClockVal = document.getElementById('tokyo-clock-val') as HTMLSpanElement;
   const parisTimeVal = document.getElementById('paris-time-val') as HTMLSpanElement;
   const tokyoTimeVal = document.getElementById('tokyo-time-val') as HTMLSpanElement;
-  const parisRawVal = document.getElementById('paris-raw-val') as HTMLSpanElement;
-  const tokyoRawVal = document.getElementById('tokyo-raw-val') as HTMLSpanElement;
+  const parisRawVal = document.getElementById('paris-raw-val') as HTMLPreElement;
+  const tokyoRawVal = document.getElementById('tokyo-raw-val') as HTMLPreElement;
   
   const syncBtn = document.getElementById('sync-btn') as HTMLButtonElement;
   const syncBar = document.getElementById('sync-bar') as HTMLDivElement;
   const syncFill = document.getElementById('sync-fill') as HTMLDivElement;
   const terminal = document.getElementById('terminal-logs') as HTMLDivElement;
+
+  const telemetryLatency = document.getElementById('telemetry-latency') as HTMLSpanElement;
+  const telemetryPayload = document.getElementById('telemetry-payload') as HTMLSpanElement;
+  const telemetryDrift = document.getElementById('telemetry-drift') as HTMLSpanElement;
 
   // Log Writer Utility
   const logEvent = (tag: 'system' | 'crdt' | 'sync', message: string): void => {
@@ -360,7 +177,7 @@ export const initVisualizer = (containerId: string): void => {
     logLine.innerHTML = `
       <span class="log-time">[${timeStr}]</span>
       <span class="log-tag ${tag}">${tag.toUpperCase()}</span>
-      <span>${message}</span>
+      <pre class="log-text" style="margin: 0; font-family: inherit; font-size: inherit; color: inherit; white-space: pre-wrap; word-break: break-all; display: inline;">${message}</pre>
     `;
     terminal.appendChild(logLine);
     terminal.scrollTop = terminal.scrollHeight;
@@ -375,15 +192,17 @@ export const initVisualizer = (containerId: string): void => {
 
     const fullState = manager.getFullState();
     const usernameEntry = fullState['username'];
-    const val = usernameEntry ? `"${usernameEntry.value}"` : '""';
     const timestampStr = usernameEntry 
       ? new Date(usernameEntry.timestamp).toISOString().split('T')[1].replace('Z', '') 
       : '-';
 
+    // Expose the raw data JSON dump in the card
+    const rawStateJson = JSON.stringify(fullState, null, 2);
+
     if (node === 'paris') {
       parisClockVal.innerHTML = clockHtml;
       parisTimeVal.innerText = timestampStr;
-      parisRawVal.innerText = val;
+      parisRawVal.innerText = rawStateJson;
       
       if (isUnsynced) {
         parisCard.classList.add('active-mutation');
@@ -397,7 +216,7 @@ export const initVisualizer = (containerId: string): void => {
     } else {
       tokyoClockVal.innerHTML = clockHtml;
       tokyoTimeVal.innerText = timestampStr;
-      tokyoRawVal.innerText = val;
+      tokyoRawVal.innerText = rawStateJson;
       
       if (isUnsynced) {
         tokyoCard.classList.add('active-mutation');
@@ -431,7 +250,10 @@ export const initVisualizer = (containerId: string): void => {
     EdgeCookieNetwork.saveState(mesh);
 
     updateNodeUI('paris', parisNode, true);
-    logEvent('crdt', `[PARIS] Local input mutation: username = "${value}" (Vector Clock incremented).`);
+    
+    // Dump entire raw state inside the terminal log
+    const stateDump = JSON.stringify(parisNode.getFullState(), null, 2);
+    logEvent('crdt', `[PARIS] Local mutation event registered. Current Node State:\n${stateDump}`);
   });
 
   // Local Event Handler for Tokyo mutations
@@ -445,7 +267,10 @@ export const initVisualizer = (containerId: string): void => {
     EdgeCookieNetwork.saveState(mesh);
 
     updateNodeUI('tokyo', tokyoNode, true);
-    logEvent('crdt', `[TOKYO] Local input mutation: username = "${value}" (Vector Clock incremented).`);
+    
+    // Dump entire raw state inside the terminal log
+    const stateDump = JSON.stringify(tokyoNode.getFullState(), null, 2);
+    logEvent('crdt', `[TOKYO] Local mutation event registered. Current Node State:\n${stateDump}`);
   });
 
   // Global Edge Synchronization click handler
@@ -455,19 +280,19 @@ export const initVisualizer = (containerId: string): void => {
 
     // UI Feedback styling changes
     syncBtn.disabled = true;
+    const oldText = syncBtn.innerHTML;
     syncBtn.innerHTML = `
-      <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="width: 22px; height: 22px; animation: spin 1.5s linear infinite; margin-right: 0.5rem;">
+      <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="width: 22px; height: 22px; animation: spin 1.5s linear infinite; margin-right: 0.5rem; display: inline-block; vertical-align: middle;">
         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
         <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
       Syncing over ocean...
     `;
 
-    // Inject temporary spin animation inside page header stylesheet
-    const spinStyle = document.createElement('style');
-    spinStyle.id = 'spin-style';
-    spinStyle.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
-    document.head.appendChild(spinStyle);
+    // Live Telemetry Loading indicators
+    telemetryLatency.innerText = 'Calculating...';
+    telemetryPayload.innerText = 'Staging...';
+    telemetryDrift.innerText = 'Syncing...';
 
     // Animate network progress bar
     syncBar.style.display = 'block';
@@ -478,13 +303,14 @@ export const initVisualizer = (containerId: string): void => {
       syncFill.style.width = '100%';
     }, 50);
 
-    // Run the latency simulation
-    await simulateLatency(800);
+    // Generate random latency between 750ms and 1400ms
+    const simulatedMs = Math.floor(Math.random() * 650 + 750); // 750ms to 1400ms
+    await simulateLatency(simulatedMs);
 
     // Retrieve global peer replication mesh
     const mesh = EdgeCookieNetwork.loadState<NetworkMesh>() || { paris_node: null, tokyo_node: null };
 
-    logEvent('sync', 'Latency window elapsed. Payload received from remote edge sites.');
+    logEvent('sync', `Latency window of ${simulatedMs}ms elapsed. Delta payload received.`);
 
     // 1. Analyze Causal Vector Clocks for visual clarity
     const pState = parisNode.getFullState()['username'];
@@ -495,8 +321,8 @@ export const initVisualizer = (containerId: string): void => {
       const tClock = new VectorClock('tokyo_node', tState.clock);
       const comparison = pClock.compare(tClock);
 
-      logEvent('crdt', `[PARIS] Vector Clock: ${JSON.stringify(pClock.getState())}`);
-      logEvent('crdt', `[TOKYO] Vector Clock: ${JSON.stringify(tClock.getState())}`);
+      logEvent('crdt', `[PARIS] Clock Payload: ${JSON.stringify(pClock.getState())}`);
+      logEvent('crdt', `[TOKYO] Clock Payload: ${JSON.stringify(tClock.getState())}`);
 
       if (comparison === VectorClockComparison.LESS) {
         logEvent('sync', 'Causal ordering: Tokyo is strictly newer than Paris. Adopt Tokyo.');
@@ -548,20 +374,22 @@ export const initVisualizer = (containerId: string): void => {
     updateNodeUI('paris', parisNode, false);
     updateNodeUI('tokyo', tokyoNode, false);
 
-    logEvent('sync', `Synchronization Complete. Converged state: "${convergedParisVal}"`);
+    // Expose exact JSON representation of newly merged CRDT state inside the terminal
+    const convergedStateJson = JSON.stringify(parisNode.getFullState(), null, 2);
+    logEvent('sync', `Convergence achieved. Synchronized State Frame:\n${convergedStateJson}`);
+
+    // Update live Telemetry values
+    const finalLatencyStr = `${simulatedMs} ms`;
+    const finalPayloadStr = (Math.random() * 0.2 + 0.9).toFixed(2) + ' KB'; // e.g. 1.04 KB
+    const finalDriftStr = (Math.random() * 0.05).toFixed(3) + '%';
+    
+    telemetryLatency.innerText = finalLatencyStr;
+    telemetryPayload.innerText = finalPayloadStr;
+    telemetryDrift.innerText = finalDriftStr;
 
     // Reset button states
     syncBtn.disabled = false;
-    syncBtn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 22px; height: 22px;">
-        <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-      </svg>
-      Force Global Edge Sync
-    `;
-
-    // Clean up temporary spinner CSS animations
-    const styleToRemove = document.getElementById('spin-style');
-    if (styleToRemove) styleToRemove.remove();
+    syncBtn.innerHTML = oldText;
 
     // Fade out progress bar
     setTimeout(() => {
