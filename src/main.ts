@@ -9,6 +9,12 @@ console.log('🚀 VXR-Continuum Engine Started!');
 EdgeCookieNetwork.clearState();
 
 // Mount the visualizer components into the DOM application target
-document.addEventListener('DOMContentLoaded', () => {
+const mountApp = () => {
   initVisualizer('app');
-});
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', mountApp);
+} else {
+  mountApp();
+}
