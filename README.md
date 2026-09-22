@@ -2,7 +2,7 @@
   <img src="./research/Voxion_Labs_Logo.png" alt="Voxion Labs Logo" width="100" />
 </p>
 
-# <p align="center">VXR-Continuum 🌌</p>
+# <p align="center">VXR-Continuum</p>
 <h3 align="center">Voxion eXperimental Research</h3>
 
 <p align="center">
@@ -11,25 +11,25 @@
   <img src="https://img.shields.io/badge/CRDT-CvRDT-ea580c" alt="CRDT" />
   <img src="https://img.shields.io/badge/Architecture-P2P--Edge-39ff8a" alt="P2P Edge" />
   <img src="https://img.shields.io/badge/Project-Applied%20Research-00d4ff" alt="Applied Research" />
-  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" />
+  <img src="https://img.shields.io/badge/License-Proprietary-red.svg" alt="License" />
 </p>
 
 <p align="center">
-  <strong>Deterministic, P2P Edge State Synchronization via Conflict-Free Replicated Data Cookies. 🧪</strong><br/>
+  <strong>Deterministic, P2P Edge State Synchronization via Conflict-Free Replicated Data Cookies.</strong><br/>
   A high-integrity, browser-native research prototype demonstrating zero-backend eventual consistency using join-semilattices, causal vector clocks, and cryptographic cookie boundaries.
 </p>
 
 ---
 
 <p align="center">
-  <a href="https://voxion-labs.github.io/VXR-Continuum/" target="_blank"><strong>🌐 Live Interactive Dashboard</strong></a> · 
-  <a href="https://voxion-labs.github.io/VXR-Continuum/paper/VXR-Continuum_IEEE.pdf" target="_blank"><strong>📄 Read 10-Page Research Paper (PDF)</strong></a> · 
-  <a href="https://github.com/Voxion-Labs/VXR-Continuum" target="_blank"><strong>💻 Source Code Repository</strong></a>
+  <a href="https://voxion-labs.github.io/VXR-Continuum/" target="_blank"><strong>Live Interactive Dashboard</strong></a> · 
+  <a href="https://voxion-labs.github.io/VXR-Continuum/paper/VXR-Continuum_IEEE.pdf" target="_blank"><strong>Read 10-Page Research Paper (PDF)</strong></a> · 
+  <a href="https://github.com/Voxion-Labs/VXR-Continuum" target="_blank"><strong>Source Code Repository</strong></a>
 </p>
 
 ---
 
-## <p align="center">Executive Overview 📑</p>
+## Executive Overview
 
 Modern decentralized applications operating at the edge are constrained by network latency, packet loss, and frequent disconnected periods. Traditional client-server models rely on heavy synchronization locks, causing UI blocking, high server overhead, and data residency hazards.
 
@@ -37,14 +37,14 @@ Modern decentralized applications operating at the edge are constrained by netwo
 
 ---
 
-## <p align="center">Core Architecture & Data Flow ⚙️</p>
+## Core Architecture & Data Flow
 
 The VXR-Continuum architecture is built on origin isolation, local memory evaluation, and asynchronous edge-to-edge convergence:
 
 ```text
   ┌────────────────────────────────────────────────────────────────────────┐
-  │                 Browser Tab A (Origin: Voxion Edge)                     │
-  │  1. Mutation Event ──► Vector Clock++ ──► Local CvRDT State Mutation    │
+  │                 Browser Tab A (Origin: Voxion Edge)                    │
+  │  1. Mutation Event ──► Vector Clock++ ──► Local CvRDT State Mutation   │
   └────────────────────────┬───────────────────────▲───────────────────────┘
                            │                       │
                            │ 2. Delta Serializer   │ 5. Local Join Merge
@@ -56,14 +56,14 @@ The VXR-Continuum architecture is built on origin isolation, local memory evalua
                            │ 4. Broadcast Channel  │ 4. Cookie Marshalling
                            ▼                       │
   ┌────────────────────────┴───────────────────────┴───────────────────────┐
-  │                 Browser Tab B (Origin: Voxion Edge)                     │
+  │                 Browser Tab B (Origin: Voxion Edge)                    │
   │  5. HMAC Validation ──► Causal Vector Check ──► Converged State Supremum│
   └────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## <p align="center" id="mathematical-model">Mathematical Foundations of CvRDTs 📐</p>
+## Mathematical Foundations of CvRDTs
 
 To guarantee conflict-free, deterministic convergence across distributed edge replicas without central lock coordination, VXR-Continuum models state transitions strictly as a **bounded join-semilattice** $(S, \sqcup, \le, \bot)$, where:
 * $S$ is the set of all possible state values.
@@ -71,17 +71,13 @@ To guarantee conflict-free, deterministic convergence across distributed edge re
 * $\le$ is the partial order relation defining state progression.
 * $\bot$ is the initial bottom element representing the empty state.
 
-### <p align="center">Lattice Properties</p>
+### Lattice Properties
 
 Deterministic eventual consistency is mathematically guaranteed because the merge operator $\sqcup$ satisfies three mathematical properties:
 
-$$\begin{aligned}
-\text{1. Idempotency:} \quad & x \sqcup x = x \\
-\text{2. Commutativity:} \quad & x \sqcup y = y \sqcup x \\
-\text{3. Associativity:} \quad & x \sqcup (y \sqcup z) = (x \sqcup y) \dots
-\end{aligned}$$
+$$\begin{aligned} \text{1. Idempotency:} \quad & x \sqcup x = x \\ \text{2. Commutativity:} \quad & x \sqcup y = y \sqcup x \\ \text{3. Associativity:} \quad & x \sqcup (y \sqcup z) = (x \sqcup y) \dots \end{aligned}$$
 
-### <p align="center">Monotonic Progression & Eventual Convergence</p>
+### Monotonic Progression & Eventual Convergence
 
 For every state mutation, replica state advances strictly monotonically:
 
@@ -95,7 +91,7 @@ This guarantees that all edge nodes reach identical state convergence regardless
 
 ---
 
-## <p align="center">Causal Ordering & Vector Clocks 🕒</p>
+## Causal Ordering & Vector Clocks
 
 While the join-semilattice guarantees convergence, resolving concurrent edits and preserving causal history requires logical **Vector Clocks**. Each replica node $i$ maintains a clock vector $V_i$ of size $N$ (active nodes):
 
@@ -103,7 +99,7 @@ $$V_i = [c_1, c_2, \dots, c_N]$$
 
 where $c_j$ represents the sequence count of updates causally originating from node $j$ and observed by node $i$.
 
-### <p align="center">Vector Comparison Rules</p>
+### Vector Comparison Rules
 
 A state update associated with clock $V_1$ causally precedes an update with clock $V_2$ ($V_1 \prec V_2$) if and only if:
 
@@ -117,11 +113,11 @@ When a conflict is detected ($V_1 \parallel V_2$), VXR-Continuum deploys a **Las
 
 ---
 
-## <p align="center" id="cookie-protocol">Cookie-Based Edge Transport Protocol 📦</p>
+## Cookie-Based Edge Transport Protocol
 
 HTTP document cookies are constrained by browser sandboxes to a maximum payload size of **4096 bytes** per domain. VXR-Continuum optimizes space utilization by executing delta-compaction (gzip) and Base64-URL serialization, packing states into structured protocol headers.
 
-### <p align="center">Binary Cookie Header Specification</p>
+### Binary Cookie Header Specification
 
 | Byte Offset | Field Identifier | Data Type | Structural Constraint & Semantic Purpose |
 | --- | --- | --- | --- |
@@ -134,33 +130,17 @@ HTTP document cookies are constrained by browser sandboxes to a maximum payload 
 
 ---
 
-## <p align="center">Security & Tampering Boundaries 🛡️</p>
+## Security & Tampering Boundaries
 
 Storing synchronization states inside document cookies exposes data to client-side manipulation. VXR-Continuum secures the transport boundary by enforcing a strict **HMAC-SHA256 Signature Chain**:
 
 $$\text{Signature} = \text{HMAC-SHA256}\big(\text{vxr\_ver} \mathbin{\Vert} \text{vxr\_epoch} \mathbin{\Vert} \text{vxr\_counter} \mathbin{\Vert} \text{vxr\_payload}, \, K_s\big)$$
 
-where $K_s$ is a key isolated within the browser's origin-protected LocalStorage. Incoming cookie packets are validated:
-
-```typescript
-// Active Cryptographic Verification Loop
-const verifyCookiePayload = (cookie: RawCookiePacket, secretKey: string): boolean => {
-  const computedSig = hmacSHA256(
-    cookie.version + cookie.epoch + cookie.counter + cookie.payload, 
-    secretKey
-  );
-  
-  if (computedSig !== cookie.signature) {
-    console.error("⚠️ [SECURITY] State tampering detected! Signature mismatch.");
-    return false; // Reject transition
-  }
-  return true; // Apply merge
-};
-```
+where $K_s$ is a key isolated within the browser's origin-protected LocalStorage. Incoming cookie packets are validated against this signature chain to prevent state poisoning.
 
 ---
 
-## <p align="center">Empirical Telemetry Performance 📈</p>
+## Empirical Telemetry Performance
 
 Under comprehensive benchmarking simulating $N=10,000$ operations across concurrent edge clients, local browser in-memory CRDT-cookie merging achieved **sub-millisecond convergence**, executing orders of magnitude faster than cloud round-trips.
 
@@ -168,7 +148,7 @@ Under comprehensive benchmarking simulating $N=10,000$ operations across concurr
   <img src="./research/latency_chart.png" alt="VXR-Continuum Latency Benchmarks" width="640" />
 </p>
 
-### <p align="center">Synchronization Phase Latency Telemetry</p>
+### Synchronization Phase Latency Telemetry
 
 | Performance Vector | Central Cloud Database | VXR-Continuum Cookie | Net Advantage / Speedup |
 | --- | --- | --- | --- |
@@ -179,19 +159,17 @@ Under comprehensive benchmarking simulating $N=10,000$ operations across concurr
 
 ---
 
-## <p align="center" id="run-locally">Run Locally 🚀</p>
+## Local Execution
 
-Verify the edge synchronization visualizer in your local environment:
-
-### <p align="center">1. Clone & Install Dependencies</p>
+### 1. Clone & Install Dependencies
 
 ```bash
-git clone https://github.com/Voxion-Labs/VXR-Continuum.git
+git clone [https://github.com/Voxion-Labs/VXR-Continuum.git](https://github.com/Voxion-Labs/VXR-Continuum.git)
 cd VXR-Continuum
 npm install
 ```
 
-### <p align="center">2. Run Local Development Server</p>
+### 2. Run Local Development Server
 
 ```bash
 npm run dev
@@ -199,7 +177,7 @@ npm run dev
 
 Open your local browser to the displayed URL (typically `http://localhost:5173/VXR-Continuum/`). Open an incognito browser tab side-by-side to watch peer mutations synchronize across clients in real-time.
 
-### <p align="center">3. Compile Production Static Assets</p>
+### 3. Compile Production Static Assets
 
 ```bash
 npm run build
@@ -209,7 +187,7 @@ The production assets compile cleanly into the `/dist/` folder for global static
 
 ---
 
-## <p align="center">Author 👥</p>
+## Architecture & Infrastructure
 
 <table align="center" style="border: none;">
 <tr style="border: none;">
@@ -219,8 +197,7 @@ The production assets compile cleanly into the `/dist/` folder for global static
 <td style="border: none; vertical-align: middle;">
   <strong><font size="4">Rudranarayan Jena</font></strong><br/>
   <em>Founder, <a href="https://github.com/Voxion-Labs" target="_blank">Voxion Labs</a></em><br/>
-  <em>Academic Profile: <a href="https://github.com/liambrooks-lab" target="_blank">@liambrooks-lab</a></em><br/>
-  <em>D.Y. Patil International University, Pune, India</em><br/><br/>
+  <em>Academic Profile: <a href="https://github.com/liambrooks-lab" target="_blank">@liambrooks-lab</a></em><br/><br/>
   <p style="margin: 0; color: #4b5563; font-size: 0.9em; max-width: 460px;">
     Applied researcher in distributed systems security and edge computing. Currently directing the <strong>VXR-Continuum</strong> initiative to study high-integrity eventual convergence and conflict-free replicated data types in sandboxed client layers.
   </p>
@@ -230,7 +207,7 @@ The production assets compile cleanly into the `/dist/` folder for global static
 
 ---
 
-## <p align="center" id="citation">Academic Citation & Bibliography 📄</p>
+## Academic Citation & Bibliography
 
 If you reference this work or utilize the VXR-Continuum eventual consistency model in your research, please cite our whitepaper:
 
@@ -241,11 +218,11 @@ If you reference this work or utilize the VXR-Continuum eventual consistency mod
   institution = {Voxion Labs Applied Systems Research Group},
   year        = {2026},
   number      = {VXR-2026-CT01},
-  url         = {https://voxion-labs.github.io/VXR-Continuum/paper/VXR-Continuum_IEEE.pdf}
+  url         = {[https://voxion-labs.github.io/VXR-Continuum/paper/VXR-Continuum_IEEE.pdf](https://voxion-labs.github.io/VXR-Continuum/paper/VXR-Continuum_IEEE.pdf)}
 }
 ```
 
-### <p align="center">References</p>
+### References
 
 * **[1]** M. Shapiro et al., *"Conflict-free replicated data types,"* in Symposium on Self-Stabilizing Systems, Springer, 2011.
 * **[2]** L. Lamport, *"Time, clocks, and the ordering of events in a distributed system,"* Commun. ACM, 21(7):558-565, 1978.
@@ -254,23 +231,14 @@ If you reference this work or utilize the VXR-Continuum eventual consistency mod
 
 ---
 
-## <p align="center">License ⚖️</p>
+## License Directives
 
-This repository is licensed under the **MIT License**.
+This repository and its underlying synchronization kernel are proprietary intellectual property. 
 
-```text
-Copyright (c) 2026 Voxion Labs
+VXR-Continuum operates under the **Voxion Labs Proprietary Research License (VL-PRL)**. 
+Open-source usage, commercial exploitation, or unauthorized distribution is strictly prohibited.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
+The full license text is available in the [LICENSE](LICENSE) directive.
 
 ---
 <p align="center">
