@@ -1,6 +1,3 @@
-<p align="center">
-  <img src="./research/Voxion_Labs_Logo.png" alt="Voxion Labs Logo" width="100" />
-</p>
 
 # <p align="center">VXR-Continuum</p>
 <h3 align="center">Voxion eXperimental Research</h3>
@@ -241,6 +238,17 @@ Open-source usage, commercial exploitation, or unauthorized distribution is stri
 The full license text is available in the [LICENSE](LICENSE) directive.
 
 ---
+
+<br>
+<div align="right">
+  <b>Rudranarayan Jena</b><br>
+  <i>Founder @ Voxion Labs</i>
+</div>
+
+---
+<div align="center">
+  (c) 2026 Voxion Labs & Rudranarayan Jena
+</div>
 <p align="center">
-  <strong>Voxion Labs</strong> · Applied Research · Zero-Backend · CRDT Edge Cookies · TypeScript · Vite
+ Applied Research · Zero-Backend · CRDT Edge Cookies · TypeScript · Vite
 </p>
